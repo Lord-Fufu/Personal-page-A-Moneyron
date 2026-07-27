@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Antoine Moneyron — Stochastic Fluid Dynamics</title>
+<meta name="description" content="Antoine Moneyron, PhD candidate at INRIA/IRMAR — stochastic partial differential equations, fluid dynamics, and location uncertainty models for oceans and waves.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+<style>
+  :root{
+    --paper: #EEF0E6;
+    --paper-2: #E3E7D9;
+    --ink: #101B22;
+    --ink-soft: #47585F;
+    --deep: #16323F;
+    --deep-2: #0D2229;
+    --brass: #B07F35;
+    --brass-soft: #C99A55;
+    --verdigris: #4B7C77;
+    --rule: rgba(16,27,34,0.14);
+    --rule-deep: rgba(238,240,230,0.18);
+    --max: 920px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Source Serif 4', Georgia, serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--brass-soft); color:var(--deep-2); }
+
+  a{ color:inherit; }
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--verdigris);
+    outline-offset:3px;
+  }
+
+  h1,h2,h3,h4{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+    letter-spacing:-0.01em;
+  }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--verdigris);
+    display:flex;
+    align-items:center;
+    gap:0.6em;
+  }
+  .eyebrow::before{
+    content:"";
+    width:16px; height:1px;
+    background:var(--verdigris);
+    display:inline-block;
+  }
+
+  .wrap{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  /* ---------- NAV ---------- */
+  header.site-nav{
+    position:sticky; top:0; z-index:40;
+    background:rgba(238,240,230,0.86);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--rule);
+  }
+  .nav-row{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:16px 28px;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:24px;
+  }
+  .nav-name{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:17px;
+    letter-spacing:-0.01em;
+    white-space:nowrap;
+  }
+  .nav-links{
+    display:flex;
+    gap:22px;
+    flex-wrap:wrap;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.04em;
+  }
+  .nav-links a{
+    text-decoration:none;
+    color:var(--ink-soft);
+    padding-bottom:3px;
+    border-bottom:1px solid transparent;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .nav-links a:hover{ color:var(--ink); border-color:var(--brass); }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:72px 0 40px;
+    border-bottom:1px solid var(--rule);
+  }
+  .hero-top{
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    gap:48px;
+    align-items:end;
+  }
+  .hero h1{
+    font-size:clamp(38px, 5.4vw, 58px);
+    line-height:1.02;
+  }
+  .hero-role{
+    margin-top:14px;
+    font-size:19px;
+    color:var(--ink-soft);
+    max-width:46ch;
+  }
+  .hero-institution{
+    margin-top:18px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--verdigris);
+    letter-spacing:0.03em;
+  }
+  .hero-tagline{
+    font-size:16px;
+    color:var(--ink-soft);
+    line-height:1.65;
+    border-left:2px solid var(--brass);
+    padding-left:18px;
+  }
+  .hero-links{
+    margin-top:24px;
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+  }
+  .pill{
+    border:1px solid var(--rule);
+    border-radius:999px;
+    padding:7px 14px;
+    text-decoration:none;
+    color:var(--ink);
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .pill:hover{ background:var(--paper-2); border-color:var(--ink-soft); }
+
+  /* ---------- SIGNATURE VISUAL ---------- */
+  .viz-block{ margin-top:44px; }
+  .viz-frame{
+    border:1px solid var(--rule);
+    background:var(--deep);
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .viz-frame canvas{ display:block; width:100%; height:260px; }
+  .viz-caption{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:12px;
+    margin-top:10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    flex-wrap:wrap;
+  }
+  .viz-caption .legend{ display:flex; gap:16px; flex-wrap:wrap; }
+  .legend-item{ display:flex; align-items:center; gap:6px; }
+  .swatch{ width:10px; height:2px; display:inline-block; }
+
+  /* ---------- SECTION SCAFFOLD ---------- */
+  section{ padding:64px 0; border-bottom:1px solid var(--rule); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{ margin-bottom:34px; max-width:60ch; }
+  .section-head h2{ font-size:29px; margin-top:10px; }
+  .section-head p{ color:var(--ink-soft); margin-top:10px; font-size:15.5px; }
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{
+    display:grid;
+    grid-template-columns:1.3fr 1fr;
+    gap:48px;
+    align-items:start;
+  }
+  .about-grid p{ font-size:16.5px; }
+  .about-grid p + p{ margin-top:14px; }
+  .tag-list{
+    display:flex; flex-wrap:wrap; gap:8px;
+    padding:0; margin:0; list-style:none;
+  }
+  .tag-list li{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    border:1px solid var(--rule);
+    padding:6px 11px;
+    border-radius:3px;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- RESEARCH CARDS ---------- */
+  .card-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1px;
+    background:var(--rule);
+    border:1px solid var(--rule);
+  }
+  .card{
+    background:var(--paper);
+    padding:26px 26px 22px;
+  }
+  .card h3{ font-size:19px; line-height:1.25; }
+  .card .card-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--brass);
+    margin-bottom:10px;
+    display:block;
+  }
+  .card p{ margin-top:12px; font-size:15px; color:var(--ink-soft); }
+  .card .refs{
+    margin-top:14px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--verdigris);
+  }
+  .card .refs a{ text-decoration:none; margin-right:10px; }
+  .card .refs a:hover{ text-decoration:underline; }
+
+  /* ---------- EQUATION PANEL ---------- */
+  .eq-panel{
+    background:var(--deep);
+    color:var(--paper);
+    padding:38px 34px;
+    border-radius:2px;
+    margin-top:44px;
+  }
+  .eq-panel .eyebrow{ color:var(--brass-soft); }
+  .eq-panel .eyebrow::before{ background:var(--brass-soft); }
+  .eq-panel h3{
+    color:var(--paper);
+    font-size:20px;
+    margin-top:12px;
+  }
+  .eq-body{
+    margin-top:20px;
+    overflow-x:auto;
+    font-size:16px;
+    color:var(--paper);
+  }
+  .eq-panel p.eq-note{
+    margin-top:18px;
+    color:rgba(238,240,230,0.72);
+    font-size:14.5px;
+    max-width:60ch;
+  }
+
+  /* ---------- CURRENT RESEARCH ---------- */
+  .plan-list{
+    display:grid;
+    gap:26px;
+  }
+  .plan-item{
+    display:grid;
+    grid-template-columns:180px 1fr;
+    gap:24px;
+  }
+  .plan-item h4{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--ink-soft);
+    font-weight:500;
+    padding-top:3px;
+  }
+  .plan-item p{ font-size:15.5px; color:var(--ink-soft); margin:0; }
+
+  /* ---------- PUBLICATIONS ---------- */
+  .pub-list{ list-style:none; margin:0; padding:0; }
+  .pub-item{
+    padding:20px 0;
+    border-top:1px solid var(--rule);
+    display:grid;
+    grid-template-columns:56px 1fr;
+    gap:20px;
+  }
+  .pub-item:last-child{ border-bottom:1px solid var(--rule); }
+  .pub-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--brass);
+    padding-top:2px;
+  }
+  .pub-title{ font-size:16.5px; font-weight:500; font-family:'Fraunces', serif; }
+  .pub-meta{
+    font-size:14px; color:var(--ink-soft); margin-top:6px;
+  }
+  .pub-meta a{
+    color:var(--verdigris); text-decoration:none; font-family:'IBM Plex Mono', monospace; font-size:12.5px;
+  }
+  .pub-meta a:hover{ text-decoration:underline; }
+
+  /* ---------- CV ---------- */
+  .cv-grid{
+    display:grid;
+    grid-template-columns:1.2fr 1fr;
+    gap:48px;
+  }
+  .cv-col h3{
+    font-size:14px;
+    font-family:'IBM Plex Mono', monospace;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--ink-soft);
+    font-weight:500;
+    margin-bottom:16px;
+  }
+  .cv-entry{ margin-bottom:20px; }
+  .cv-entry .role{ font-size:16px; font-weight:600; font-family:'Fraunces', serif; }
+  .cv-entry .org{ font-size:14px; color:var(--verdigris); margin-top:2px; }
+  .cv-entry .date{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-soft); margin-top:2px; }
+  .cv-entry ul{ margin:8px 0 0; padding-left:18px; }
+  .cv-entry li{ font-size:14.5px; color:var(--ink-soft); margin-top:4px; }
+
+  .skill-row{ display:flex; justify-content:space-between; gap:12px; font-size:14.5px; padding:7px 0; border-top:1px solid var(--rule); }
+  .skill-row:first-of-type{ border-top:none; }
+  .skill-row span:first-child{ color:var(--ink); }
+  .skill-row span:last-child{ color:var(--ink-soft); font-family:'IBM Plex Mono', monospace; font-size:12.5px; }
+
+  /* ---------- TALKS TIMELINE ---------- */
+  .timeline{ position:relative; padding-left:26px; }
+  .timeline::before{
+    content:"";
+    position:absolute; left:5px; top:6px; bottom:6px;
+    width:1px; background:var(--rule);
+  }
+  .t-item{ position:relative; padding-bottom:26px; }
+  .t-item:last-child{ padding-bottom:0; }
+  .t-item::before{
+    content:"";
+    position:absolute; left:-26px; top:6px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--paper);
+    border:2px solid var(--brass);
+  }
+  .t-date{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; color:var(--verdigris);
+  }
+  .t-title{ font-size:16px; font-weight:600; font-family:'Fraunces', serif; margin-top:3px; }
+  .t-place{ font-size:14px; color:var(--ink-soft); margin-top:2px; }
+
+  /* ---------- CONTACT / FOOTER ---------- */
+  .contact{
+    background:var(--deep-2);
+    color:var(--paper);
+    padding:64px 0 40px;
+  }
+  .contact .eyebrow{ color:var(--brass-soft); }
+  .contact .eyebrow::before{ background:var(--brass-soft); }
+  .contact h2{
+    color:var(--paper);
+    font-size:30px;
+    margin-top:12px;
+    max-width:20ch;
+  }
+  .contact-grid{
+    margin-top:32px;
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:24px;
+  }
+  .contact-card{
+    border:1px solid var(--rule-deep);
+    padding:20px;
+    border-radius:2px;
+  }
+  .contact-card .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--brass-soft);
+  }
+  .contact-card .value{
+    margin-top:8px;
+    font-size:15.5px;
+  }
+  .contact-card a{ color:var(--paper); text-decoration:none; border-bottom:1px solid var(--rule-deep); }
+  .contact-card a:hover{ border-color:var(--paper); }
+  footer{
+    margin-top:48px;
+    padding-top:20px;
+    border-top:1px solid var(--rule-deep);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:rgba(238,240,230,0.55);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 760px){
+    .hero-top{ grid-template-columns:1fr; gap:28px; }
+    .about-grid{ grid-template-columns:1fr; }
+    .card-grid{ grid-template-columns:1fr; }
+    .cv-grid{ grid-template-columns:1fr; }
+    .plan-item{ grid-template-columns:1fr; gap:6px; }
+    .pub-item{ grid-template-columns:40px 1fr; }
+    .contact-grid{ grid-template-columns:1fr; }
+    .nav-links{ display:none; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <div class="nav-row">
+    <span class="nav-name">Antoine Moneyron</span>
+    <nav class="nav-links">
+      <a href="#about">About</a>
+      <a href="#research">Research</a>
+      <a href="#current">Current work</a>
+      <a href="#publications">Publications</a>
+      <a href="#cv">CV</a>
+      <a href="#talks">Talks</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- ================= HERO ================= -->
+  <section class="hero wrap" id="top" style="border-bottom:none;">
+    <div class="hero-top">
+      <div>
+        <span class="eyebrow">PhD Candidate · Applied Mathematics</span>
+        <h1>Antoine<br>Moneyron</h1>
+        <p class="hero-role">Stochastic partial differential equations for fluid dynamics — oceans, coastal waves, and the mathematics of turbulence under location uncertainty.</p>
+        <p class="hero-institution">INRIA (University of Rennes) · IRMAR — Rennes, France</p>
+      </div>
+      <div>
+        <p class="hero-tagline">I derive physical models by adding a rigorously constructed noise term to classical conservation laws — mass, momentum, energy — and then try to prove that the resulting equations are well-posed.</p>
+        <div class="hero-links">
+          <a class="pill" href="mailto:tonio-amg@hotmail.fr">Email</a>
+          <a class="pill" href="#publications">Publications</a>
+          <a class="pill" href="#cv">Full CV</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="viz-block">
+      <div class="viz-frame">
+        <canvas id="lu-canvas" aria-label="Animated diagram: a deterministic wave path in ivory, surrounded by several stochastic realisations in brass, illustrating the location uncertainty formalism." role="img"></canvas>
+      </div>
+      <div class="viz-caption">
+        <span>One deterministic path, several stochastic realisations — the location uncertainty formalism.</span>
+        <span class="legend">
+          <span class="legend-item"><span class="swatch" style="background:#EEF0E6;"></span>deterministic mean</span>
+          <span class="legend-item"><span class="swatch" style="background:#C99A55;"></span>stochastic realisations</span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section class="wrap" id="about">
+    <div class="section-head">
+      <span class="eyebrow">About</span>
+      <h2>Modelling turbulence through stochasticity</h2>
+    </div>
+    <div class="about-grid">
+      <div>
+        <p>I am a PhD candidate at INRIA and IRMAR (University of Rennes), supervised by <strong>Arnaud Debussche</strong> (ENS Rennes / IRMAR) and <strong>Étienne Mémin</strong> (INRIA / IRMAR). My work sits at the intersection of stochastic analysis and fluid mechanics, built on the <strong>location uncertainty (LU)</strong> formalism developed by Mémin and collaborators.</p>
+        <p>Very loosely, LU treats turbulence as a deviation from a deterministic equation, introduced through a small-scale, rigorously constructed noise term. It lets you derive an entire family of models — geophysical flows, reduced-order models, large-eddy simulations — from the same conservation principles used in the deterministic setting.</p>
+        <p>I am as interested in what the noise represents physically as I am in proving theorems about it. I would like to keep working on stochastic PDEs connected to physics, ideally discovering fields of application beyond fluid mechanics.</p>
+      </div>
+      <div>
+        <ul class="tag-list">
+          <li>Stochastic Modelling</li>
+          <li>Stochastic Calculus</li>
+          <li>Stochastic PDEs</li>
+          <li>Fluid Dynamics</li>
+          <li>Mathematical Physics</li>
+          <li>Numerical Methods</li>
+          <li>Well-posedness theory</li>
+          <li>Python · Julia · C++</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RESEARCH ================= -->
+  <section class="wrap" id="research">
+    <div class="section-head">
+      <span class="eyebrow">Past &amp; ongoing research</span>
+      <h2>Four threads, one formalism</h2>
+      <p>Notation follows the publication list below — [J.n] for journal articles, [P.n] for preprints, [O.n] for ongoing work.</p>
+    </div>
+
+    <div class="card-grid">
+      <article class="card">
+        <span class="card-tag">Well-posedness</span>
+        <h3>A stochastic ocean model: the primitive equations</h3>
+        <p>With Arnaud Debussche and Étienne Mémin, I built a stochastic interpretation of the oceanic primitive equations that relaxes the classical hydrostatic assumption, keeping stochastic terms in the vertical momentum balance as mechanical deviations from equilibrium. This moves the model closer to the true three-dimensional problem, at the cost of a far more complex pressure structure — which we regularise with a low-pass filter. We prove global-in-time well-posedness for the regularised system, adapting the Glatt-Holtz–Ziane argument rather than the abstract stochastic-maximal-regularity setting, and lean on Cao–Titi's barotropic/baroclinic splitting for the key estimates.</p>
+        <div class="refs">
+          <a href="#publications">[J.1]</a><a href="#publications">[J.4]</a><a href="#publications">[P.1]</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="card-tag">Asymptotics</span>
+        <h3>From Navier–Stokes to the primitive equations</h3>
+        <p>I study the vanishing-aspect-ratio limit of the LU Navier–Stokes equations toward the LU primitive equations, adapting Li &amp; Titi's deterministic proof scheme to the stochastic setting. Itô's formula forces the introduction of a modified Leray-type projector to handle the pressure terms; under periodic boundary conditions the convergence can be upgraded from a weak L²–H¹ norm to a strong H¹–H² one. The result exposes a "grey zone" — governed by the aspect ratio and noise-intensity parameters — where the relaxed-hydrostatic model approximates 3D Navier–Stokes better than the classical hydrostatic one. Submitted to <em>Archive for Rational Mechanics and Analysis</em>.</p>
+        <div class="refs"><a href="#publications">[P.1]</a></div>
+      </article>
+
+      <article class="card">
+        <span class="card-tag">Modelling · Numerics</span>
+        <h3>Stochastic wave models</h3>
+        <p>Applying the LU formalism to conservation of mass and momentum yields stochastic counterparts of the Saint-Venant, Boussinesq, and Serre–Green–Naghdi equations for coastal waves — which I implemented in 1D and 2D with direct and pseudo-spectral methods. More recently I have been deriving an LU interpretation of the full Water Waves equations, building on Dinvay–Mémin and Lannes. In the small-aspect-ratio limit it formally recovers the earlier shallow-water models, and it opens a route toward understanding extreme waves as extreme realisations of a stochastic dynamics, and toward introducing rotational effects while keeping the flow irrotational.</p>
+        <div class="refs"><a href="#publications">[J.2]</a><a href="#publications">[O.1]</a></div>
+      </article>
+
+      <article class="card">
+        <span class="card-tag">Master's work</span>
+        <h3>A different kind of noise: gene regulatory networks</h3>
+        <p>My Master's thesis approximated a gene regulatory network using stochastic differential equations, with fast environmental switching. My contribution was mostly code implementation, time-series analysis, and parameter forecasting — a useful reminder that the same stochastic toolkit travels well outside fluid mechanics.</p>
+        <div class="refs"><a href="#publications">[J.3]</a></div>
+      </article>
+    </div>
+
+    <div class="eq-panel">
+      <span class="eyebrow">Signature system</span>
+      <h3>The LU Saint-Venant equations</h3>
+      <div class="eq-body">
+        \[
+        \begin{aligned}
+        d_t\eta + \big[(u\,dt + \sigma_H dW_t)\cdot\nabla_H\big]\eta &amp;= -(h_0+\eta)\,\nabla_H\!\cdot\!\big(u\,dt + \sigma_H dW_t\big),\\[4pt]
+        d_t u + \big[(u\,dt + \sigma_H dW_t)\cdot\nabla_H\big]u + \nabla_H \eta\, dt &amp;= 0,
+        \end{aligned}
+        \]
+      </div>
+      <p class="eq-note">η is the water height, u the depth-averaged horizontal velocity, and σ<sub>H</sub>dW<sub>t</sub> the noise-driven horizontal displacement. Set the noise to zero and you recover the classical deterministic Saint-Venant system — the location uncertainty formalism only ever adds a rigorously derived perturbation on top of familiar physics.</p>
+    </div>
+  </section>
+
+  <!-- ================= CURRENT & PLANNED ================= -->
+  <section class="wrap" id="current">
+    <div class="section-head">
+      <span class="eyebrow">Current &amp; planned research</span>
+      <h2>Open questions I'm chasing</h2>
+    </div>
+    <div class="plan-list">
+      <div class="plan-item">
+        <h4>Noise–velocity coupling</h4>
+        <p>Following a variational derivation by Debussche and Mémin that reaches an LU-Euler-type model, I'm studying well-posedness for a Navier–Stokes system where the noise is coupled to the velocity rather than fixed in advance — considerably richer dynamics than the fixed-noise case. A natural extension is to noise correlated in space and time, and to study convergence toward the fully decorrelated regime.</p>
+      </div>
+      <div class="plan-item">
+        <h4>Boundary conditions &amp; hyperbolic PDEs</h4>
+        <p>My PhD has mostly involved parabolic techniques and free-slip boundary conditions, which behave very differently from classical Dirichlet or Neumann conditions. I'd like to extend into hyperbolic PDEs — the Euler equations, in particular — and keep exploring how boundary conditions shape solution behaviour more generally.</p>
+      </div>
+      <div class="plan-item">
+        <h4>Well-posedness of stochastic Water Waves</h4>
+        <p>I'm curious whether the Fujita–Kato argument, already adapted to additive noise, extends to transport noise and the LU system — and whether the deterministic well-posedness theory for Water Waves (Lannes) can be adapted stochastically, possibly clarifying how noise affects blow-up time.</p>
+      </div>
+      <div class="plan-item">
+        <h4>The martingale pressure</h4>
+        <p>Working on the primitive equations made clear how essential a martingale pressure term is in LU models: without it, the divergence-free condition would force the transport noise itself to vanish. I want to understand the interaction between this martingale pressure and transport noise — a possible window into how turbulence arises in these models — and eventually build a stochastic interpretation of the Water Waves system directly from stochastic Euler.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PUBLICATIONS ================= -->
+  <section class="wrap" id="publications">
+    <div class="section-head">
+      <span class="eyebrow">Publications &amp; preprints</span>
+      <h2>Selected work</h2>
+    </div>
+    <ul class="pub-list">
+      <li class="pub-item">
+        <span class="pub-tag">[J.1]</span>
+        <div>
+          <div class="pub-title">Some Properties of a Non-hydrostatic Stochastic Oceanic Primitive Equations Model</div>
+          <div class="pub-meta">A. Debussche, E. Mémin, A. Moneyron — <em>Stochastic Transport in Upper Ocean Dynamics III</em> (2025), pp. 161–182 · <a href="https://doi.org/10.1007/978-3-031-70660-8" target="_blank" rel="noopener">doi.org/10.1007/978-3-031-70660-8</a></div>
+        </div>
+      </li>
+      <li class="pub-item">
+        <span class="pub-tag">[J.2]</span>
+        <div>
+          <div class="pub-title">Derivation of Stochastic Models for Coastal Waves</div>
+          <div class="pub-meta">A. Debussche, E. Mémin, A. Moneyron — <em>Stochastic Transport in Upper Ocean Dynamics III</em> (2025), pp. 183–221 · <a href="https://doi.org/10.1007/978-3-031-70660-8" target="_blank" rel="noopener">doi.org/10.1007/978-3-031-70660-8</a></div>
+        </div>
+      </li>
+      <li class="pub-item">
+        <span class="pub-tag">[J.3]</span>
+        <div>
+          <div class="pub-title">Efficient Approximations of Transcriptional Bursting Effects on the Dynamics of a Gene Regulatory Network</div>
+          <div class="pub-meta">J. Kursawe, A. Moneyron, T. Galla — <em>J. R. Soc. Interface</em> (2025) · <a href="https://doi.org/10.1098/rsif.2025.0170" target="_blank" rel="noopener">doi.org/10.1098/rsif.2025.0170</a></div>
+        </div>
+      </li>
+      <li class="pub-item">
+        <span class="pub-tag">[J.4]</span>
+        <div>
+          <div class="pub-title">Stochastic Interpretations of the Oceanic Primitive Equations with Relaxed Hydrostatic Assumptions</div>
+          <div class="pub-meta">A. Debussche, E. Mémin, A. Moneyron — <em>Rendiconti Lincei. Matematica e Applicazioni</em> (2026) · <a href="https://doi.org/10.48550/arXiv.2502.14946" target="_blank" rel="noopener">arXiv:2502.14946</a></div>
+        </div>
+      </li>
+      <li class="pub-item">
+        <span class="pub-tag">[P.1]</span>
+        <div>
+          <div class="pub-title">Interpretation of Stochastic Primitive Equations with Relaxed Hydrostatic Assumption as a Higher Order Approximation of 3D Stochastic Navier–Stokes</div>
+          <div class="pub-meta">A. Debussche, E. Mémin, A. Moneyron — submitted to <em>Archive for Rational Mechanics and Analysis</em> · <a href="https://doi.org/10.48550/arXiv.2602.04422" target="_blank" rel="noopener">arXiv:2602.04422</a></div>
+        </div>
+      </li>
+      <li class="pub-item">
+        <span class="pub-tag">[O.1]</span>
+        <div>
+          <div class="pub-title">A Stochastic Interpretation of the Water Waves Model</div>
+          <div class="pub-meta">A. Debussche, E. Mémin, A. Moneyron — in preparation</div>
+        </div>
+      </li>
+      <li class="pub-item">
+        <span class="pub-tag">[O.2]</span>
+        <div>
+          <div class="pub-title">Well-posedness and Criticality of a Stochastic Model for Liquid Crystals</div>
+          <div class="pub-meta">G. Del Sarto, A. Moneyron, E. Theewis, T. Zoechling — in preparation</div>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ================= CV ================= -->
+  <section class="wrap" id="cv">
+    <div class="section-head">
+      <span class="eyebrow">Curriculum</span>
+      <h2>Experience &amp; education</h2>
+    </div>
+    <div class="cv-grid">
+      <div class="cv-col">
+        <h3>Research &amp; Teaching</h3>
+
+        <div class="cv-entry">
+          <div class="role">PhD Student</div>
+          <div class="org">INRIA (University of Rennes) / IRMAR — Rennes, France</div>
+          <div class="date">March 2023 – June 2026</div>
+          <ul>
+            <li>Supervised by Arnaud Debussche (ENS Rennes/IRMAR) and Étienne Mémin (INRIA/IRMAR)</li>
+            <li>Derivation and analysis of stochastic (location uncertainty) oceanic primitive equations</li>
+            <li>Well-posedness of regularised versions of this model</li>
+            <li>Convergence of the LU Navier–Stokes equations toward the LU primitive equations</li>
+            <li>Derivation and numerical implementation of stochastic wave models (Python, Julia)</li>
+          </ul>
+        </div>
+
+        <div class="cv-entry">
+          <div class="role">Teaching Assistant, Numerical Analysis</div>
+          <div class="org">ENS Rennes</div>
+          <div class="date">January 2024 – April 2026</div>
+        </div>
+
+        <div class="cv-entry">
+          <div class="role">Master's Intern Co-supervisor</div>
+          <div class="org">Baptiste Viorney (INSA Rouen) — stochastic model for coastal waves</div>
+          <div class="date">4 months, 2024</div>
+        </div>
+
+        <div class="cv-entry">
+          <div class="role">Research Internship (remote)</div>
+          <div class="org">Scalian — Rennes, France</div>
+          <div class="date">February 2021 – July 2021</div>
+          <ul>
+            <li>Stochastic reduced-order model for wind turbine control</li>
+            <li>Literature review of discrete interpolation methods (DEIM)</li>
+            <li>Adapted an existing DEIM implementation (C++, OpenFOAM)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cv-col">
+        <h3>Education</h3>
+        <div class="cv-entry">
+          <div class="role">PhD, Applied Mathematics</div>
+          <div class="org">INRIA / IRMAR</div>
+          <div class="date">March 2023 – June 2026</div>
+        </div>
+        <div class="cv-entry">
+          <div class="role">MSc Mathematics</div>
+          <div class="org">University of St Andrews, United Kingdom</div>
+          <div class="date">September 2021 – September 2022</div>
+          <ul><li>Thesis: stochastic modelling of delayed chemical systems with fast environmental switching</li></ul>
+        </div>
+        <div class="cv-entry">
+          <div class="role">Engineering Degree — Mathematics &amp; Applications</div>
+          <div class="org">Centrale Nantes, France</div>
+          <div class="date">September 2019 – February 2023</div>
+          <ul><li>Final internship: INRIA–IRMAR (Oct 2022 – Feb 2023)</li></ul>
+        </div>
+
+        <h3 style="margin-top:34px;">Skills</h3>
+        <div class="skill-row"><span>Python</span><span>Advanced</span></div>
+        <div class="skill-row"><span>Julia</span><span>Intermediate</span></div>
+        <div class="skill-row"><span>C++</span><span>Intermediate</span></div>
+        <div class="skill-row"><span>OCaml</span><span>Basics</span></div>
+        <div class="skill-row"><span>French</span><span>Native</span></div>
+        <div class="skill-row"><span>English</span><span>Fully fluent</span></div>
+        <div class="skill-row"><span>Spanish</span><span>Working level</span></div>
+        <div class="skill-row"><span>Chinese</span><span>Basics</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TALKS ================= -->
+  <section class="wrap" id="talks">
+    <div class="section-head">
+      <span class="eyebrow">Talks &amp; colloquia</span>
+      <h2>Where I've presented this work</h2>
+    </div>
+    <div class="timeline">
+      <div class="t-item">
+        <div class="t-date">July 2023</div>
+        <div class="t-title">STUOD &amp; SFB 1294 — Modern Approaches in SPDEs and Data Assimilation</div>
+        <div class="t-place">Sibiu, Romania — presentation on the LU oceanic primitive equations</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">September 2024</div>
+        <div class="t-title">5th STUOD Annual Workshop</div>
+        <div class="t-place">Rennes, France — presentation on the LU oceanic primitive equations</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">October 2024</div>
+        <div class="t-title">Workshop on Oceanic Small-Scale Representation in Numerical Simulations</div>
+        <div class="t-place">Brest, France — attending only</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">April 2025</div>
+        <div class="t-title">ADA Conference — Theoretical and Numerical Analysis of Multi-Scale Equations</div>
+        <div class="t-place">Lyon, France — presentation on the LU oceanic primitive equations</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">May 2025</div>
+        <div class="t-title">Interdisciplinary Congress on Advanced Wave Models (CIMAV 2025)</div>
+        <div class="t-place">Aussois, France — presentation on stochastic wave models</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">June 2025</div>
+        <div class="t-title">Stochastic Partial Differential Equations in Critical Spaces</div>
+        <div class="t-place">Oberwolfach, Germany — attending only</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">July 2025</div>
+        <div class="t-title">Festum Pi Summer School</div>
+        <div class="t-place">Chania, Greece — attending only</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">September 2025</div>
+        <div class="t-title">6th STUOD Annual Workshop</div>
+        <div class="t-place">Edinburgh, United Kingdom — presentation on the limit of Navier–Stokes toward the LU primitive equations</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">November 2025</div>
+        <div class="t-title">Climath — Coastal Flows, Extreme Waves and Wave-Structure Interaction</div>
+        <div class="t-place">Bordeaux, France — presentation on stochastic wave models</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">July 2026</div>
+        <div class="t-title">Numerical Methods for SPDEs: Bridging Theory and Applications</div>
+        <div class="t-place">Athens, Greece — presentations on the LU primitive equations and stochastic wave models</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">June–July 2027</div>
+        <div class="t-title">At the Crossroads of Deterministic and Stochastic Evolution Equations</div>
+        <div class="t-place">Bedlewo, Poland — presentations on topics to be chosen</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ================= CONTACT ================= -->
+<div class="contact" id="contact">
+  <div class="wrap">
+    <span class="eyebrow">Get in touch</span>
+    <h2>Reach out about collaborations, postdoc opportunities, or the work above.</h2>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="label">Email</div>
+        <div class="value"><a href="mailto:tonio-amg@hotmail.fr">tonio-amg@hotmail.fr</a></div>
+      </div>
+      <div class="contact-card">
+        <div class="label">Institution</div>
+        <div class="value">INRIA / IRMAR<br>Campus de Beaulieu, Rennes</div>
+      </div>
+      <div class="contact-card">
+        <div class="label">Location</div>
+        <div class="value">Rennes, France</div>
+      </div>
+    </div>
+    <footer>
+      <span>© 2026 Antoine Moneyron</span>
+      <span>Built from a research statement &amp; CV</span>
+    </footer>
+  </div>
+</div>
+
+<script>
+(function(){
+  const canvas = document.getElementById('lu-canvas');
+  const ctx = canvas.getContext('2d');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let W, H, DPR;
+  function resize(){
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = canvas.clientWidth;
+    H = canvas.clientHeight;
+    canvas.width = W * DPR;
+    canvas.height = H * DPR;
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const N_REALISATIONS = 5;
+  const POINTS = 140;
+
+  function gaussian(){
+    let u = 0, v = 0;
+    while(u === 0) u = Math.random();
+    while(v === 0) v = Math.random();
+    return Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*v);
+  }
+
+  // Each realisation keeps a running Brownian offset per x-sample, re-walked each frame.
+  let paths = [];
+  function initPaths(){
+    paths = [];
+    for(let r=0; r<N_REALISATIONS; r++){
+      paths.push(new Array(POINTS).fill(0));
+    }
+  }
+  initPaths();
+
+  function deterministic(x){
+    // sum of two sines -> a plausible "coastal wave" mean profile
+    return Math.sin(x*1.3) * 0.55 + Math.sin(x*0.6 + 1.2) * 0.35;
+  }
+
+  let t = 0;
+  function step(){
+    t += 0.015;
+    for(let r=0; r<N_REALISATIONS; r++){
+      const arr = paths[r];
+      for(let i=0;i<POINTS;i++){
+        // mean-reverting jitter so paths stay near the deterministic curve
+        arr[i] = arr[i]*0.94 + gaussian()*0.05;
+      }
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    const midY = H*0.56;
+    const ampY = H*0.30;
+    const marginX = 18;
+    const spanX = W - marginX*2;
+
+    // faint horizontal baseline
+    ctx.strokeStyle = 'rgba(238,240,230,0.10)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(marginX, midY);
+    ctx.lineTo(W-marginX, midY);
+    ctx.stroke();
+
+    // stochastic realisations (brass, translucent)
+    const brassColors = ['rgba(201,154,85,0.85)','rgba(201,154,85,0.65)','rgba(201,154,85,0.5)','rgba(201,154,85,0.65)','rgba(201,154,85,0.4)'];
+    for(let r=0; r<N_REALISATIONS; r++){
+      ctx.beginPath();
+      for(let i=0;i<POINTS;i++){
+        const xNorm = i/(POINTS-1);
+        const x = marginX + xNorm*spanX;
+        const phase = xNorm*8 + t;
+        const y = midY - deterministic(phase)*ampY - paths[r][i]*ampY*0.9;
+        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.strokeStyle = brassColors[r % brassColors.length];
+      ctx.lineWidth = 1.1;
+      ctx.stroke();
+    }
+
+    // deterministic mean path (ivory, solid, on top)
+    ctx.beginPath();
+    for(let i=0;i<POINTS;i++){
+      const xNorm = i/(POINTS-1);
+      const x = marginX + xNorm*spanX;
+      const phase = xNorm*8 + t;
+      const y = midY - deterministic(phase)*ampY;
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle = '#EEF0E6';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  function loop(){
+    step();
+    draw();
+    if(!reduceMotion) requestAnimationFrame(loop);
+  }
+
+  if(reduceMotion){
+    // draw a single static, settled frame
+    for(let k=0;k<40;k++) step();
+    draw();
+  } else {
+    requestAnimationFrame(loop);
+  }
+})();
+</script>
+
+</body>
+</html>
