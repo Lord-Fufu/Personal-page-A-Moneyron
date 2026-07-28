@@ -204,8 +204,8 @@
   section{ padding:64px 0; border-bottom:1px solid var(--rule); }
   section:last-of-type{ border-bottom:none; }
   .section-head{ margin-bottom:34px; max-width:60ch; }
-  .section-head h2{ font-size:29px; margin-top:20px; }
-  .section-head p{ color:var(--ink-soft); margin-top:20px; font-size:15.5px; }
+  .section-head h2{ font-size:29px; margin-top:10px; }
+  .section-head p{ color:var(--ink-soft); margin-top:10px; font-size:15.5px; }
 
   /* ---------- ABOUT ---------- */
   .about-grid{
@@ -540,7 +540,7 @@
       <article class="card">
         <span class="card-tag">Well-posedness</span>
         <h3>A stochastic ocean model: the primitive equations</h3>
-        <p>With my supervisors, I built a stochastic interpretation of the oceanic primitive equations that relaxes the classical hydrostatic assumption, keeping stochastic terms in the vertical momentum balance as mechanical deviations from equilibrium. This moves the model closer to the true three-dimensional problem, at the cost of a far more complex pressure structure — which we regularise with a low-pass filter. We prove global-in-time well-posedness for the regularised system, adapting the Glatt-Holtz–Ziane argument rather than the abstract stochastic-maximal-regularity setting, and lean on Cao–Titi's barotropic/baroclinic splitting for the key estimates.</p>
+        <p>With my supervisors, I built a stochastic interpretation of the oceanic primitive equations that relaxes the classical hydrostatic assumption, keeping stochastic terms in the vertical momentum balance as mechanical deviations from equilibrium. This moves the model closer to the true three-dimensional problem, at the cost of a far more complex pressure structure — which we regularise with a low-pass filter. We proved global-in-time well-posedness for the regularised system, in the spirit of the Debussche-Glatt-Holtz–Ziane and Brzezniak-Slavik arguments. We also used many insights provided by the stochastic-maximal-regularity setting of Agresti-Veraar -- see Agresti et al. (2021) -- and use Cao–Titi's barotropic/baroclinic splitting for the key estimates.</p>
         <div class="refs">
           <a href="#publications">[J.1]</a><a href="#publications">[J.4]</a><a href="#publications">[P.1]</a>
         </div>
@@ -549,14 +549,14 @@
       <article class="card">
         <span class="card-tag">Asymptotics</span>
         <h3>From Navier–Stokes to the primitive equations</h3>
-        <p>I study the vanishing-aspect-ratio limit of the LU Navier–Stokes equations toward the LU primitive equations, adapting Li &amp; Titi's deterministic proof scheme to the stochastic setting. Itô's formula forces the introduction of a modified Leray-type projector to handle the pressure terms; under periodic boundary conditions the convergence can be upgraded from a weak L²–H¹ norm to a strong H¹–H² one. The result exposes a "grey zone" — governed by the aspect ratio and noise-intensity parameters — where the relaxed-hydrostatic model approximates 3D Navier–Stokes better than the classical hydrostatic one. Submitted to <em>Archive for Rational Mechanics and Analysis</em>.</p>
+        <p>I studied the vanishing-aspect-ratio limit of the LU Navier–Stokes equations toward the LU primitive equations, adapting Li &amp; Titi's (2019) deterministic proof scheme to the stochastic setting. Itô's formula forces the introduction of a modified Leray-type projector to handle the pressure terms; under periodic boundary conditions the convergence can be upgraded from a weak L²–H¹ norm to a strong H¹–H² one. The result exposes a "grey zone" — governed by the aspect ratio and noise-intensity parameters — where the relaxed-hydrostatic model approximates 3D Navier–Stokes better than the classical hydrostatic one. Submitted to <em>Archive for Rational Mechanics and Analysis</em>.</p>
         <div class="refs"><a href="#publications">[P.1]</a></div>
       </article>
 
       <article class="card">
         <span class="card-tag">Modelling · Numerics</span>
         <h3>Stochastic wave models</h3>
-        <p>Applying the LU formalism to conservation of mass and momentum yields stochastic counterparts of the Saint-Venant, Boussinesq, and Serre–Green–Naghdi equations for coastal waves — which I implemented in 1D and 2D with direct and pseudo-spectral methods. More recently I have been deriving an LU interpretation of the full Water Waves equations, building on Dinvay–Mémin and Lannes. In the small-aspect-ratio limit it formally recovers the earlier shallow-water models, and it opens a route toward understanding extreme waves as extreme realisations of a stochastic dynamics, and toward introducing rotational effects while keeping the flow irrotational.</p>
+        <p>Applying the LU formalism to conservation of mass and momentum yields stochastic counterparts of the Saint-Venant, Boussinesq, and Serre–Green–Naghdi equations for coastal waves — which I implemented in 1D and 2D with direct and pseudo-spectral methods. More recently I have been deriving an LU interpretation of the full Water Waves equations, building on Dinvay–Mémin (2022) and Lannes (2013). In the small-aspect-ratio limit, it formally recovers stochastic interpretations of these shallow-water models, and it opens a route toward understanding extreme waves as extreme realisations of a stochastic dynamics.</p>
         <div class="refs"><a href="#publications">[J.2]</a><a href="#publications">[O.1]</a></div>
       </article>
 
@@ -581,7 +581,7 @@
         \end{aligned}
         \]
       </div>
-      <p class="eq-note">where η is the water height, u the depth-averaged horizontal velocity, and σ<sub>H</sub>dW<sub>t</sub> the noise-driven horizontal displacement. In addition, \(\circ\) stands for the Stratonovitch product. Set the noise to zero and you recover the classical deterministic Saint-Venant system — the location uncertainty formalism only adds a perturbation on top of familiar physics.</p>
+      <p class="eq-note">where η is the water height, u the depth-averaged horizontal velocity, and σ<sub>H</sub>dW<sub>t</sub> the noise-driven horizontal displacement. In addition, \(\circ\) stands for the Stratonovitch product. Set the noise to zero and you recover the classical deterministic Saint-Venant system: the location uncertainty formalism only adds a perturbation on top of familiar physics.</p>
     </div>
   </section>
 
