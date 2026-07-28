@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Antoine Moneyron — Stochastic Fluid Dynamics</title>
-<meta name="description" content="Antoine Moneyron, PhD candidate at INRIA/IRMAR — stochastic partial differential equations, fluid dynamics, and location uncertainty models for oceans and waves.">
+<title>Antoine Moneyron</title>
+<meta name="description" content="Antoine Moneyron, Doctor of Mathematics (INRIA/IRMAR 2026)">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -472,13 +472,13 @@
   <section class="hero wrap" id="top" style="border-bottom:none;">
     <div class="hero-top">
       <div>
-        <span class="eyebrow">PhD Candidate · Applied Mathematics</span>
+        <span class="eyebrow">Doctor of Mathematics</span>
         <h1>Antoine<br>Moneyron</h1>
-        <p class="hero-role">Stochastic partial differential equations for fluid dynamics — oceans, coastal waves, and the mathematics of turbulence under location uncertainty.</p>
+        <p class="hero-role">Stochastic partial differential equations for fluid dynamics — Application to ocean models and waves.</p>
         <p class="hero-institution">INRIA (University of Rennes) · IRMAR — Rennes, France</p>
       </div>
       <div>
-        <p class="hero-tagline">I derive physical models by adding a rigorously constructed noise term to classical conservation laws — mass, momentum, energy — and then try to prove that the resulting equations are well-posed.</p>
+        <p class="hero-tagline">During my PhD, my work covered two distinct types of models: ocean models and wave models. I have derived stochastic interpretations of these from the location uncertainty formalism, which consists in adding a noise term preserving classical conservation laws — e.g. mass, momentum, energy. Then, I have studied well-posedness of the resulting ocean model (namely, the stochastic primitive equations with transport noise). In the case of waves, I have implemented various numerical methods to solve the arising range of stochastic wave models.</p>
         <div class="hero-links">
           <a class="pill" href="mailto:tonio-amg@hotmail.fr">Email</a>
           <a class="pill" href="#publications">Publications</a>
@@ -489,10 +489,10 @@
 
     <div class="viz-block">
       <div class="viz-frame">
-        <canvas id="lu-canvas" aria-label="Animated diagram: a deterministic wave path in ivory, surrounded by several stochastic realisations in brass, illustrating the location uncertainty formalism." role="img"></canvas>
+        <canvas id="lu-canvas" aria-label="Animated diagram: a deterministic wave path in ivory, surrounded by several stochastic realisations in brass, illustrating the variability induced by the stochastic differential equation." role="img"></canvas>
       </div>
       <div class="viz-caption">
-        <span>One deterministic path, several stochastic realisations — the location uncertainty formalism.</span>
+        <span>One deterministic path, several stochastic realisations.</span>
         <span class="legend">
           <span class="legend-item"><span class="swatch" style="background:#EEF0E6;"></span>deterministic mean</span>
           <span class="legend-item"><span class="swatch" style="background:#C99A55;"></span>stochastic realisations</span>
@@ -510,8 +510,8 @@
     <div class="about-grid">
       <div>
         <p>I am a PhD candidate at INRIA and IRMAR (University of Rennes), supervised by <strong>Arnaud Debussche</strong> (ENS Rennes / IRMAR) and <strong>Étienne Mémin</strong> (INRIA / IRMAR). My work sits at the intersection of stochastic analysis and fluid mechanics, built on the <strong>location uncertainty (LU)</strong> formalism developed by Mémin and collaborators.</p>
-        <p>Very loosely, LU treats turbulence as a deviation from a deterministic equation, introduced through a small-scale, rigorously constructed noise term. It lets you derive an entire family of models — geophysical flows, reduced-order models, large-eddy simulations — from the same conservation principles used in the deterministic setting.</p>
-        <p>I am as interested in what the noise represents physically as I am in proving theorems about it. I would like to keep working on stochastic PDEs connected to physics, ideally discovering fields of application beyond fluid mechanics.</p>
+        <p>Very loosely, LU introduces a small-scale, rigorously constructed noise term, to model the effects of unresolved dynamics on the large-scale one. It lets you derive an entire family of models — geophysical flows, reduced-order models, large-eddy simulations — from the same conservation principles used in the deterministic setting.</p>
+        <p>I am as interested in the physical background behind the stochasticity as I am in proving theorems the arising models. I would like to keep working on stochastic PDEs connected to physics, and am open to discovering fields of application beyond fluid mechanics.</p>
       </div>
       <div>
         <ul class="tag-list">
@@ -560,6 +560,7 @@
         <div class="refs"><a href="#publications">[J.2]</a><a href="#publications">[O.1]</a></div>
       </article>
 
+    <!--
       <article class="card">
         <span class="card-tag">Master's work</span>
         <h3>A different kind of noise: gene regulatory networks</h3>
@@ -567,6 +568,7 @@
         <div class="refs"><a href="#publications">[J.3]</a></div>
       </article>
     </div>
+    -->
 
     <div class="eq-panel">
       <span class="eyebrow">Signature system</span>
@@ -574,8 +576,8 @@
       <div class="eq-body">
         \[
         \begin{aligned}
-        d_t\eta + \big[(u\,dt + \sigma_H dW_t)\cdot\nabla_H\big]\eta &amp;= -(h_0+\eta)\,\nabla_H\!\cdot\!\big(u\,dt + \sigma_H dW_t\big),\\[4pt]
-        d_t u + \big[(u\,dt + \sigma_H dW_t)\cdot\nabla_H\big]u + \nabla_H \eta\, dt &amp;= 0,
+        d_t\eta &amp;+ \big[(u\,dt + \sigma_H dW_t)\cdot\nabla_H\big]\eta = -(h_0+\eta)\,\nabla_H\!\cdot\!\big(u\,dt + \sigma_H dW_t\big),\\[4pt]
+        d_t u &amp;+ \big[(u\,dt + \sigma_H dW_t)\cdot\nabla_H\big]u + \nabla_H \eta\, dt = 0,
         \end{aligned}
         \]
       </div>
@@ -583,7 +585,7 @@
     </div>
   </section>
 
-  <!-- ================= CURRENT & PLANNED ================= -->
+  <!-- ================= CURRENT & PLANNED ================= 
   <section class="wrap" id="current">
     <div class="section-head">
       <span class="eyebrow">Current &amp; planned research</span>
@@ -608,7 +610,8 @@
       </div>
     </div>
   </section>
-
+  -->
+  
   <!-- ================= PUBLICATIONS ================= -->
   <section class="wrap" id="publications">
     <div class="section-head">
@@ -834,8 +837,8 @@
       </div>
     </div>
     <footer>
-      <span>© 2026 Antoine Moneyron</span>
-      <span>Built from a research statement &amp; CV</span>
+      <span>Antoine Moneyron 2026</span>
+      <!--<span>Built from a research statement--> &amp; CV</span>
     </footer>
   </div>
 </div>
