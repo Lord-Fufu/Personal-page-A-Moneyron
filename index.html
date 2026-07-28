@@ -30,7 +30,7 @@
     --verdigris: #4B7C77;
     --rule: rgba(16,27,34,0.14);
     --rule-deep: rgba(238,240,230,0.18);
-    --max: 920px;
+    --max: 1200px;
   }
 
   *{box-sizing:border-box;}
@@ -532,7 +532,7 @@
   <section class="wrap" id="research">
     <div class="section-head">
       <span class="eyebrow">Past &amp; ongoing research</span>
-      <h2>Four threads, one formalism</h2>
+      <h2>Quick presentation of my work</h2>
       <p>Notation follows the publication list below — [J.n] for journal articles, [P.n] for preprints, [O.n] for ongoing work.</p>
     </div>
 
@@ -571,17 +571,17 @@
     -->
 
     <div class="eq-panel">
-      <span class="eyebrow">Signature system</span>
+      <span class="eyebrow">An example of wave model</span>
       <h3>The LU Saint-Venant equations</h3>
       <div class="eq-body">
         \[
         \begin{aligned}
-        d_t\eta &amp;+ \big[(u\,dt + \sigma_H dW_t)\cdot\nabla_H\big]\eta = -(h_0+\eta)\,\nabla_H\!\cdot\!\big(u\,dt + \sigma_H dW_t\big),\\[4pt]
-        d_t u &amp;+ \big[(u\,dt + \sigma_H dW_t)\cdot\nabla_H\big]u + \nabla_H \eta\, dt = 0,
+        d_t\eta &amp;+ \big[(u\,dt + \sigma_H dW_t)\circ\nabla_H\big]\eta = -(h_0+\eta)\,\nabla_H\!\circ\!\big(u\,dt + \sigma_H dW_t\big),\\[4pt]
+        d_t u &amp;+ \big[(u\,dt + \sigma_H dW_t)\circ\nabla_H\big]u + \nabla_H \eta\, dt = 0,
         \end{aligned}
         \]
       </div>
-      <p class="eq-note">η is the water height, u the depth-averaged horizontal velocity, and σ<sub>H</sub>dW<sub>t</sub> the noise-driven horizontal displacement. Set the noise to zero and you recover the classical deterministic Saint-Venant system — the location uncertainty formalism only ever adds a rigorously derived perturbation on top of familiar physics.</p>
+      <p class="eq-note">where η is the water height, u the depth-averaged horizontal velocity, and σ<sub>H</sub>dW<sub>t</sub> the noise-driven horizontal displacement. Set the noise to zero and you recover the classical deterministic Saint-Venant system — the location uncertainty formalism only adds a perturbation on top of familiar physics.</p>
     </div>
   </section>
 
@@ -684,9 +684,9 @@
         <div class="cv-entry">
           <div class="role">PhD Student</div>
           <div class="org">INRIA (University of Rennes) / IRMAR — Rennes, France</div>
+          <div class="org">Supervised by Arnaud Debussche (ENS Rennes/IRMAR) and Étienne Mémin (INRIA/IRMAR)</div>
           <div class="date">March 2023 – June 2026</div>
           <ul>
-            <li>Supervised by Arnaud Debussche (ENS Rennes/IRMAR) and Étienne Mémin (INRIA/IRMAR)</li>
             <li>Derivation and analysis of stochastic (location uncertainty) oceanic primitive equations</li>
             <li>Well-posedness of regularised versions of this model</li>
             <li>Convergence of the LU Navier–Stokes equations toward the LU primitive equations</li>
@@ -738,11 +738,12 @@
           <ul><li>Final internship: INRIA–IRMAR (Oct 2022 – Feb 2023)</li></ul>
         </div>
 
-        <h3 style="margin-top:34px;">Skills</h3>
+        <h3 style="margin-top:34px;">Computing skills</h3>
         <div class="skill-row"><span>Python</span><span>Advanced</span></div>
         <div class="skill-row"><span>Julia</span><span>Intermediate</span></div>
         <div class="skill-row"><span>C++</span><span>Intermediate</span></div>
         <div class="skill-row"><span>OCaml</span><span>Basics</span></div>
+        <h3 style="margin-top:34px;">Languages</h3>
         <div class="skill-row"><span>French</span><span>Native</span></div>
         <div class="skill-row"><span>English</span><span>Fully fluent</span></div>
         <div class="skill-row"><span>Spanish</span><span>Working level</span></div>
@@ -755,13 +756,48 @@
   <section class="wrap" id="talks">
     <div class="section-head">
       <span class="eyebrow">Talks &amp; colloquia</span>
-      <h2>Where I've presented this work</h2>
+      <!--<h2>Where I've presented this work</h2>-->
     </div>
     <div class="timeline">
       <div class="t-item">
-        <div class="t-date">July 2023</div>
-        <div class="t-title">STUOD &amp; SFB 1294 — Modern Approaches in SPDEs and Data Assimilation</div>
-        <div class="t-place">Sibiu, Romania — presentation on the LU oceanic primitive equations</div>
+        <div class="t-date">June–July 2027</div>
+        <div class="t-title">At the Crossroads of Deterministic and Stochastic Evolution Equations</div>
+        <div class="t-place">Bedlewo, Poland — presentations on topics to be chosen</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">July 2026</div>
+        <div class="t-title">Numerical Methods for SPDEs: Bridging Theory and Applications</div>
+        <div class="t-place">Athens, Greece — presentations on the LU primitive equations and stochastic wave models</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">November 2025</div>
+        <div class="t-title">Climath — Coastal Flows, Extreme Waves and Wave-Structure Interaction</div>
+        <div class="t-place">Bordeaux, France — presentation on stochastic wave models</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">September 2025</div>
+        <div class="t-title">6th STUOD Annual Workshop</div>
+        <div class="t-place">Edinburgh, United Kingdom — presentation on the limit of Navier–Stokes toward the LU primitive equations</div>
+      </div>
+      <!--<div class="t-item">
+        <div class="t-date">July 2025</div>
+        <div class="t-title">Festum Pi Summer School</div>
+        <div class="t-place">Chania, Greece — attending only</div>
+      </div>-->
+      <div class="t-item">
+        <div class="t-date">June 2025</div>
+        <div class="t-title">Stochastic Partial Differential Equations in Critical Spaces</div>
+        <div class="t-place">Oberwolfach, Germany — attending only</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">May 2025</div>
+        <div class="t-title">Interdisciplinary Congress on Advanced Wave Models (CIMAV 2025)</div>
+        <div class="t-place">Aussois, France — presentation on stochastic wave models</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">April 2025</div>
+        <div class="t-title">ADA Conference — Theoretical and Numerical Analysis of Multi-Scale Equations</div>
+        <div class="t-place">Lyon, France — presentation on the LU oceanic primitive equations</div>
       </div>
       <div class="t-item">
         <div class="t-date">September 2024</div>
@@ -774,44 +810,9 @@
         <div class="t-place">Brest, France — attending only</div>
       </div>
       <div class="t-item">
-        <div class="t-date">April 2025</div>
-        <div class="t-title">ADA Conference — Theoretical and Numerical Analysis of Multi-Scale Equations</div>
-        <div class="t-place">Lyon, France — presentation on the LU oceanic primitive equations</div>
-      </div>
-      <div class="t-item">
-        <div class="t-date">May 2025</div>
-        <div class="t-title">Interdisciplinary Congress on Advanced Wave Models (CIMAV 2025)</div>
-        <div class="t-place">Aussois, France — presentation on stochastic wave models</div>
-      </div>
-      <div class="t-item">
-        <div class="t-date">June 2025</div>
-        <div class="t-title">Stochastic Partial Differential Equations in Critical Spaces</div>
-        <div class="t-place">Oberwolfach, Germany — attending only</div>
-      </div>
-      <div class="t-item">
-        <div class="t-date">July 2025</div>
-        <div class="t-title">Festum Pi Summer School</div>
-        <div class="t-place">Chania, Greece — attending only</div>
-      </div>
-      <div class="t-item">
-        <div class="t-date">September 2025</div>
-        <div class="t-title">6th STUOD Annual Workshop</div>
-        <div class="t-place">Edinburgh, United Kingdom — presentation on the limit of Navier–Stokes toward the LU primitive equations</div>
-      </div>
-      <div class="t-item">
-        <div class="t-date">November 2025</div>
-        <div class="t-title">Climath — Coastal Flows, Extreme Waves and Wave-Structure Interaction</div>
-        <div class="t-place">Bordeaux, France — presentation on stochastic wave models</div>
-      </div>
-      <div class="t-item">
-        <div class="t-date">July 2026</div>
-        <div class="t-title">Numerical Methods for SPDEs: Bridging Theory and Applications</div>
-        <div class="t-place">Athens, Greece — presentations on the LU primitive equations and stochastic wave models</div>
-      </div>
-      <div class="t-item">
-        <div class="t-date">June–July 2027</div>
-        <div class="t-title">At the Crossroads of Deterministic and Stochastic Evolution Equations</div>
-        <div class="t-place">Bedlewo, Poland — presentations on topics to be chosen</div>
+        <div class="t-date">July 2023</div>
+        <div class="t-title">STUOD &amp; SFB 1294 — Modern Approaches in SPDEs and Data Assimilation</div>
+        <div class="t-place">Sibiu, Romania — presentation on the LU oceanic primitive equations</div>
       </div>
     </div>
   </section>
